@@ -29,7 +29,7 @@ export default function Appbar({ state, descriptors, navigation }) {
 						<Ionicons
 							name={iconName}
 							size={28}
-							color={focused ? '#007AFF' : '#8e8e93'}
+							color={focused ? "black" : '#8e8e93'}
 						/>
 					</TouchableOpacity>
 				);
@@ -41,20 +41,24 @@ export default function Appbar({ state, descriptors, navigation }) {
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-		bottom: 0,
-		left: 20,
-		right: 20,
+		bottom: 20,
+		
 		flexDirection: 'row',
-		backgroundColor: '#f1f1f1',
-		borderRadius: 10,
-		height: 70,
-		justifyContent: 'space-around',
+		alignSelf: 'center',
 		alignItems: 'center',
+		justifyContent: 'space-around',
+
+		backgroundColor: "white",
+		borderRadius: 10,
+		width: "80%",
+		height: 70,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 8 },
 		shadowOpacity: 0.1,
 		shadowRadius: 10,
 		elevation: 5,
+		borderWidth: 1.5,
+		borderColor: "black"
 	},
 	iconContainer: {
 		flex: 1,
