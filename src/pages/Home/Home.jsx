@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+
 import Date from './Date'
 import TaskCard from './TaskCard'
 
@@ -57,41 +58,41 @@ export default function Home({ navigation }) {
 	])
 	const red = {
 		heading: "Urgent Tasks",
-		headerColor: {backgroundColor: "#F08080"},
-		contentColor: {backgroundColor: "rgba(255, 105, 97, 0.3)"}
+		headerColor: { backgroundColor: "#F08080" },
+		contentColor: { backgroundColor: "rgba(255, 105, 97, 0.3)" }
 	}
 	const yellow = {
 		heading: "Urgent Tasks",
-		headerColor: {backgroundColor: "#ffeb99"},
-		contentColor: {backgroundColor: "rgba(255, 235, 153, 0.5)"}
+		headerColor: { backgroundColor: "#ffeb99" },
+		contentColor: { backgroundColor: "rgba(255, 235, 153, 0.5)" }
 	}
 	const green = {
 		heading: "Urgent Tasks",
-		headerColor: {backgroundColor: "#d4f4dd"},
-		contentColor: {backgroundColor: "rgba(212, 244, 221, 0.5)"}
+		headerColor: { backgroundColor: "#d4f4dd" },
+		contentColor: { backgroundColor: "rgba(212, 244, 221, 0.5)" }
 	}
 
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewStyle}>
-			<View style={styles.header}>
-				<View>
-					<Text style={styles.heading}>What's</Text>
-					<Text style={styles.heading2}>Tomorrow?</Text>
+		<SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
+			<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewStyle} showsVerticalScrollIndicator={false}>
+				<View style={styles.header}>
+					<View>
+						<Text style={styles.heading}>What's</Text>
+						<Text style={styles.heading2}>Tomorrow?</Text>
+					</View>
+					<Date />
 				</View>
-				<Date />
-			</View>
 
-			<TaskCard category={red} tasks={redTasks} setTasks={setRedTasks} />
-			<TaskCard category={yellow} tasks={yellowTasks} setTasks={setYellowTasks} />
-			<TaskCard category={green} tasks={greenTasks} setTasks={setGreenTasks} />
-		</ScrollView>
+				<TaskCard category={red} tasks={redTasks} setTasks={setRedTasks} />
+				<TaskCard category={yellow} tasks={yellowTasks} setTasks={setYellowTasks} />
+				<TaskCard category={green} tasks={greenTasks} setTasks={setGreenTasks} />
+			</ScrollView>
+		</SafeAreaView>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: "white",
 		paddingTop: 20,
 		paddingHorizontal: 20,
 	},
