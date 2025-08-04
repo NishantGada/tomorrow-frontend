@@ -67,8 +67,8 @@ const RedTaskCard = () => {
 	}
 
 	const CreateNewTask = (task) => {
-		console.log("task: ", task);
-	}
+		setRedTasks(prevTasks => [...prevTasks, task]);
+	};
 
 	return (
 		<View style={styles.container}>
