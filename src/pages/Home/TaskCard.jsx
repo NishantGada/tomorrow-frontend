@@ -4,39 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 import TaskModal from './TaskModal';
 import TaskDetailModal from './TaskDetailModal';
 
-const RedTaskCard = () => {
+const TaskCard = ({ category, tasks, setTasks }) => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [redTasks, setRedTasks] = useState([
-		{
-			"id": 1,
-			"title": "task 1",
-			"description": "task 1 description"
-		},
-		{
-			"id": 2,
-			"title": "task 2",
-			"description": "task 2 description"
-		},
-		{
-			"id": 3,
-			"title": "task 3",
-			"description": "task 3 description"
-		},
-	])
 
-
-	// variables used when you click on a specific task 
 	const [taskDetailModalVisible, setTaskDetailModalVisible] = useState(false);
 	const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
 	const [editedTitle, setEditedTitle] = useState('')
 	const [editedDescription, setEditedDescription] = useState('')
 
-
 	const openModal = (index) => {
 		console.log("index: ", index);
 		setSelectedTaskIndex(index)
-		setEditedTitle(redTasks[index].title)
-		setEditedDescription(redTasks[index].description)
+		setEditedTitle(tasks[index].title)
+		setEditedDescription(tasks[index].description)
 		setTaskDetailModalVisible(true)
 	}
 
@@ -47,27 +27,27 @@ const RedTaskCard = () => {
 
 	const updateTask = () => {
 		if (selectedTaskIndex !== null) {
-			const updatedTasks = [...redTasks]
+			const updatedTasks = [...tasks]
 			updatedTasks[selectedTaskIndex] = {
 				title: editedTitle,
 				description: editedDescription,
 			}
-			setRedTasks(updatedTasks)
+			setTasks(updatedTasks)
 		}
 		closeModal()
 	}
 
 	const markDone = () => {
 		if (selectedTaskIndex !== null) {
-			const updatedTasks = [...redTasks]
+			const updatedTasks = [...tasks]
 			updatedTasks.splice(selectedTaskIndex, 1)
-			setRedTasks(updatedTasks)
+			setTasks(updatedTasks)
 		}
 		closeModal()
 	}
 
 	const CreateNewTask = (task) => {
-		setRedTasks(prevTasks => [...prevTasks, task]);
+		setTasks(prevTasks => [...prevTasks, task]);
 	};
 
 	return (
@@ -78,22 +58,22 @@ const RedTaskCard = () => {
 				onSubmit={CreateNewTask}
 			/>
 
-			<View style={styles.header}>
-				<Text style={styles.headerText}>Urgent Tasks</Text>
+			<View style={[styles.header, category.headerColor]}>
+				<Text style={styles.headerText}>{category.heading}</Text>
 				<TouchableOpacity onPress={() => setModalVisible(true)}>
-					<Ionicons name="add" size={28} color="#fff" />
+					<Ionicons name="add" size={28} color="black" />
 				</TouchableOpacity>
 			</View>
 
-			<View style={styles.taskList}>
-				{redTasks.map((task, index) => (
+			<View style={[styles.taskList, category.contentColor]}>
+				{tasks.map((task, index) => (
 					<TouchableOpacity
 						key={index}
 						onPress={() => openModal(index)}
 					>
 						<Text style={styles.taskText}>{task.title}</Text>
 
-						{index !== redTasks.length - 1 && <View style={styles.divider} />}
+						{index !== tasks.length - 1 && <View style={styles.divider} />}
 					</TouchableOpacity>
 				))}
 			</View>
@@ -125,20 +105,18 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		flex: 2,
-		backgroundColor: "#F08080",
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		padding: 16,
 	},
 	headerText: {
-		color: '#fff',
+		color: 'black',
 		fontSize: 18,
 		fontWeight: 'bold',
 	},
 	taskList: {
 		flex: 8,
-		backgroundColor: "rgba(255, 105, 97, 0.3)",
 		paddingHorizontal: 16,
 	},
 	taskText: {
@@ -154,4 +132,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default RedTaskCard;
+export default TaskCard;
