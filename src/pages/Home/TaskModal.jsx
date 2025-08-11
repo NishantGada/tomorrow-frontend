@@ -24,7 +24,7 @@ const TaskModal = ({ visible, onClose, onSubmit }) => {
 	};
 
 	return (
-		<Modal visible={visible} transparent animationType="slide">
+		<Modal visible={visible} transparent animationType="none">
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContainer}>
 					<Text style={styles.heading}>Create New Task</Text>

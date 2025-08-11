@@ -19,7 +19,7 @@ export default function TaskDetailModal({
 	setEditedDescription,
 }) {
 	return (
-		<Modal visible={visible} animationType="slide" transparent>
+		<Modal visible={visible} animationType="none" transparent>
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContainer}>
 					<Text style={styles.heading}>Task Details</Text>
