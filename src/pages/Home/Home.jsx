@@ -57,17 +57,17 @@ export default function Home({ navigation }) {
 		},
 	])
 	const red = {
-		heading: "Urgent Tasks",
+		heading: "High Priority",
 		headerColor: { backgroundColor: "#F08080" },
 		contentColor: { backgroundColor: "rgba(255, 105, 97, 0.3)" }
 	}
 	const yellow = {
-		heading: "Urgent Tasks",
+		heading: "Medium Priority",
 		headerColor: { backgroundColor: "#ffeb99" },
 		contentColor: { backgroundColor: "rgba(255, 235, 153, 0.5)" }
 	}
 	const green = {
-		heading: "Urgent Tasks",
+		heading: "Low Priority",
 		headerColor: { backgroundColor: "#d4f4dd" },
 		contentColor: { backgroundColor: "rgba(212, 244, 221, 0.5)" }
 	}
