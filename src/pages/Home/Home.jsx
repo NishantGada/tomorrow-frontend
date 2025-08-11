@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import Date from './Date'
 import TaskCard from './TaskCard'
+import { StyleConstants } from '../../utils/StyleConstants';
 
 export default function Home({ navigation }) {
 	const [tasks, setTasks] = useState([
@@ -62,22 +63,6 @@ export default function Home({ navigation }) {
 		},
 	])
 
-	const red = {
-		heading: "High Priority",
-		headerColor: { backgroundColor: "#F08080" },
-		contentColor: { backgroundColor: "rgba(255, 105, 97, 0.3)" }
-	}
-	const yellow = {
-		heading: "Medium Priority",
-		headerColor: { backgroundColor: "#ffeb99" },
-		contentColor: { backgroundColor: "rgba(255, 235, 153, 0.5)" }
-	}
-	const green = {
-		heading: "Low Priority",
-		headerColor: { backgroundColor: "#d4f4dd" },
-		contentColor: { backgroundColor: "rgba(212, 244, 221, 0.5)" }
-	}
-
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
 			<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewStyle} showsVerticalScrollIndicator={false}>
@@ -89,9 +74,9 @@ export default function Home({ navigation }) {
 					<Date />
 				</View>
 
-				<TaskCard category={red} tasks={tasks.filter(task => task.priority === "high")} setTasks={setTasks} />
-				<TaskCard category={yellow} tasks={tasks.filter(task => task.priority === "medium")} setTasks={setTasks} />
-				<TaskCard category={green} tasks={tasks.filter(task => task.priority === "low")} setTasks={setTasks} />
+				<TaskCard category={StyleConstants["high"]} tasks={tasks.filter(task => task.priority === "high")} setTasks={setTasks} />
+				<TaskCard category={StyleConstants["medium"]} tasks={tasks.filter(task => task.priority === "medium")} setTasks={setTasks} />
+				<TaskCard category={StyleConstants["low"]} tasks={tasks.filter(task => task.priority === "low")} setTasks={setTasks} />
 			</ScrollView>
 		</SafeAreaView>
 	)

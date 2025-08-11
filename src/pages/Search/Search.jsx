@@ -1,6 +1,7 @@
 import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import TaskCard from '../Home/TaskCard';
+import { StyleConstants } from '../../utils/StyleConstants';
 
 export default function Search() {
 	const [searchQuery, setSearchQuery] = useState('');
@@ -56,13 +57,68 @@ export default function Search() {
 		},
 	])
 
-	const allTasks = [...redTasks, ...yellowTasks, ...greenTasks];
-	console.log({ allTasks });
+	const [tasks, setTasks] = useState([
+		{
+			"id": 1,
+			"title": "task 1",
+			"description": "task 1 description",
+			"priority": "high"
+		},
+		{
+			"id": 2,
+			"title": "task 2",
+			"description": "task 2 description",
+			"priority": "high"
+		},
+		{
+			"id": 3,
+			"title": "task 3",
+			"description": "task 3 description",
+			"priority": "high"
+		},
+		{
+			"id": 4,
+			"title": "task 4",
+			"description": "task 4 description",
+			"priority": "medium"
+		},
+		{
+			"id": 5,
+			"title": "task 5",
+			"description": "task 5 description",
+			"priority": "medium"
+		},
+		{
+			"id": 6,
+			"title": "task 6",
+			"description": "task 6 description",
+			"priority": "medium"
+		},
+		{
+			"id": 7,
+			"title": "task 7",
+			"description": "task 7 description",
+			"priority": "low"
+		},
+		{
+			"id": 8,
+			"title": "task 8",
+			"description": "task 8 description",
+			"priority": "low"
+		},
+		{
+			"id": 9,
+			"title": "task 9",
+			"description": "task 9 description",
+			"priority": "low"
+		},
+	])
 
-	const filteredCategories = allTasks.filter((item) =>
+	const filteredTasks = tasks.filter((item) =>
 		item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
 		item.description.toLowerCase().includes(searchQuery.toLowerCase())
 	);
+	console.log({ filteredTasks });
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
@@ -70,16 +126,19 @@ export default function Search() {
 				<TextInput
 					style={styles.search}
 					placeholder="Search..."
-					placeholderTextColor="white"
+					placeholderTextColor="black"
 					value={searchQuery}
 					onChangeText={setSearchQuery}
 				/>
 
 				<ScrollView style={{ marginVertical: 20 }}>
-					{filteredCategories.map((category, index) => (
-						<View key={index} style={{ padding: 15 }}>
-							<Text style={{ fontSize: 18 }}>{category.title}</Text>
-							<Text style={{ fontSize: 12, color: "lightgray" }}>{category.description}</Text>
+					{filteredTasks.map((task, index) => (
+						<View key={index} style={styles.taskDisplayView}>
+							<View style={[styles.colorBox, StyleConstants[task.priority].headerColor]}></View>
+							<View>
+								<Text style={{ fontSize: 18 }}>{task.title}</Text>
+								<Text style={{ fontSize: 12, color: "lightgray" }}>{task.description}</Text>
+							</View>
 						</View>
 					))}
 				</ScrollView>
@@ -100,8 +159,27 @@ const styles = StyleSheet.create({
 	},
 
 	search: {
+		backgroundColor: "white",
+		padding: 15,
+
+		borderWidth: 2,
+		borderColor: "black",
 		borderRadius: 8,
-		backgroundColor: "#F08080",
-		padding: 20,
+	},
+
+	taskDisplayView: {
+		padding: 15,
+
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		columnGap: 10,
+	},
+
+	colorBox: {
+		borderRadius: 8,
+
+		width: 30,
+		height: 30
 	}
 })
