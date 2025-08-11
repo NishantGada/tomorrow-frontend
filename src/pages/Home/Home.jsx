@@ -5,57 +5,63 @@ import Date from './Date'
 import TaskCard from './TaskCard'
 
 export default function Home({ navigation }) {
-	const [redTasks, setRedTasks] = useState([
+	const [tasks, setTasks] = useState([
 		{
 			"id": 1,
 			"title": "task 1",
-			"description": "task 1 description"
+			"description": "task 1 description",
+			"priority": "high"
 		},
 		{
 			"id": 2,
 			"title": "task 2",
-			"description": "task 2 description"
+			"description": "task 2 description",
+			"priority": "high"
 		},
 		{
 			"id": 3,
 			"title": "task 3",
-			"description": "task 3 description"
+			"description": "task 3 description",
+			"priority": "high"
 		},
-	])
-	const [yellowTasks, setYellowTasks] = useState([
 		{
 			"id": 4,
 			"title": "task 4",
-			"description": "task 4 description"
+			"description": "task 4 description",
+			"priority": "medium"
 		},
 		{
 			"id": 5,
 			"title": "task 5",
-			"description": "task 5 description"
+			"description": "task 5 description",
+			"priority": "medium"
 		},
 		{
 			"id": 6,
 			"title": "task 6",
-			"description": "task 6 description"
+			"description": "task 6 description",
+			"priority": "medium"
 		},
-	])
-	const [greenTasks, setGreenTasks] = useState([
 		{
 			"id": 7,
 			"title": "task 7",
-			"description": "task 7 description"
+			"description": "task 7 description",
+			"priority": "low"
 		},
 		{
 			"id": 8,
 			"title": "task 8",
-			"description": "task 8 description"
+			"description": "task 8 description",
+			"priority": "low"
 		},
 		{
 			"id": 9,
 			"title": "task 9",
-			"description": "task 9 description"
+			"description": "task 9 description",
+			"priority": "low"
 		},
 	])
+
 	const red = {
 		heading: "High Priority",
 		headerColor: { backgroundColor: "#F08080" },
@@ -83,9 +89,9 @@ export default function Home({ navigation }) {
 					<Date />
 				</View>
 
-				<TaskCard category={red} tasks={redTasks} setTasks={setRedTasks} />
-				<TaskCard category={yellow} tasks={yellowTasks} setTasks={setYellowTasks} />
-				<TaskCard category={green} tasks={greenTasks} setTasks={setGreenTasks} />
+				<TaskCard category={red} tasks={tasks.filter(task => task.priority === "high")} setTasks={setTasks} />
+				<TaskCard category={yellow} tasks={tasks.filter(task => task.priority === "medium")} setTasks={setTasks} />
+				<TaskCard category={green} tasks={tasks.filter(task => task.priority === "low")} setTasks={setTasks} />
 			</ScrollView>
 		</SafeAreaView>
 	)
@@ -105,11 +111,13 @@ const styles = StyleSheet.create({
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between"
+		justifyContent: "space-between",
+
+		marginBottom: 20,
 	},
 
 	heading: {
-		fontSize: 24,
+		fontSize: 20,
 		fontWeight: "bold",
 	},
 
