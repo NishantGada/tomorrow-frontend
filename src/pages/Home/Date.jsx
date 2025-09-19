@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 
-export default function Date() {
+export default function Date({ tomorrowDate }) {
 	return (
 		<View style={styles.dateContainer}>
-			<Text style={styles.dateNumber}>25</Text>
-			<Text style={styles.dateMonth}>August</Text>
+			<Text style={styles.dateNumber}>{tomorrowDate["day"]}</Text>
+			<Text style={styles.dateMonth}>{tomorrowDate["month_name"]}</Text>
 		</View>
 	)
 }
