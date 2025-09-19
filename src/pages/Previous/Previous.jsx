@@ -5,7 +5,7 @@ export default function Previous() {
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<ScrollView style={styles.container}>
-				<Text style={styles.heading}>Your previous tasks..</Text>
+				<Text style={styles.heading}>Your previous tasks</Text>
 
 				<View style={styles.dateWiseContainer}>
 					<Text style={styles.date}>25th August, 2025</Text>
