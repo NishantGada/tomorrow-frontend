@@ -21,7 +21,7 @@ export default function App() {
           screenOptions={{ headerShown: false }}
         >
           <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Search" component={Search} />
+          {/* <Tab.Screen name="Search" component={Search} /> */}
           <Tab.Screen name="Previous" component={Previous} />
           <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
