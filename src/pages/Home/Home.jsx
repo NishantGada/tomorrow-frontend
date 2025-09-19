@@ -10,6 +10,7 @@ import SendRequest from '../../utils/SendRequest';
 
 export default function Home({ navigation }) {
   const [tasks, setTasks] = useState([])
+  const [tomorrowDate, setTomorrowDate] = useState({});
 
   const getTasksAPI = async () => {
     try {
@@ -22,14 +23,30 @@ export default function Home({ navigation }) {
     }
   }
 
+  const getTomorrowDateAPI = async () => {
+    try {
+      const response = await SendRequest("/tomorrow-date", {}, "GET", {});
+      setTomorrowDate({
+        "day": response.data.data.day,
+        "month": response.data.data.month,
+        "month_name": response.data.data.month_name
+      })
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
   // const today = new Date();
   // const todayFormatted = formatDateSimple(today);
   // const todaysTasks = tasks.filter(task => task.date_added === todayFormatted);
   // console.log({ todaysTasks });
 
   useEffect(() => {
+    getTomorrowDateAPI();
     getTasksAPI();
   }, [])
+
+  console.log(tomorrowDate);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
@@ -39,7 +56,7 @@ export default function Home({ navigation }) {
             <Text style={styles.heading}>What's</Text>
             <Text style={styles.heading2}>Tomorrow?</Text>
           </View>
-          <Date />
+          <Date tomorrowDate={tomorrowDate} />
         </View>
 
         <TaskCard category={StyleConstants["high"]} tasks={tasks.filter(task => task.priority === "high")} setTasks={setTasks} />
