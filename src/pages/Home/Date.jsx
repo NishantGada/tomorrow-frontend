@@ -14,10 +14,11 @@ const styles = StyleSheet.create({
 	dateContainer: {
 		padding: 6,
 		alignItems: 'center',
-		borderWidth: 2,
-		borderColor: "#FFDAB9",
+		borderWidth: 1.5,
+		borderColor: "black",
 		borderRadius: 10,
-		backgroundColor: "#FFDAB9"
+		// borderColor: "#FFDAB9",
+		// backgroundColor: "#FFDAB9"
 	},
 
 	dateNumber: {
