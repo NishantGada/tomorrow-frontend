@@ -1,16 +1,23 @@
 import React from 'react';
 import {
-  View,
-  Text,
   Image,
-  StyleSheet,
   SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
   ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Profile() {
+  const { logout } = useAuth();
+
+  const handleOnLogout = () => {
+    logout();
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
@@ -91,7 +98,7 @@ export default function Profile() {
         </TouchableOpacity>
 
         {/* Logout Button */}
-        <TouchableOpacity style={[styles.button, styles.logoutButton]}>
+        <TouchableOpacity onPress={handleOnLogout} style={[styles.button, styles.logoutButton]}>
           <Text style={[styles.buttonText, styles.logoutText]}>Log Out</Text>
         </TouchableOpacity>
       </ScrollView>
