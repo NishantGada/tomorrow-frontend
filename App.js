@@ -1,48 +1,30 @@
-import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
 
-import Home from './src/pages/Home/Home';
-import Profile from './src/pages/Profile/Profile';
-import Appbar from './src/components/Appbar/Appbar';
-import Search from './src/pages/Search/Search';
-import Previous from './src/pages/Previous/Previous';
 import AddNewModal from './src/components/Modal/AddNewModal';
+import { AuthProvider } from './src/context/AuthContext';
+import StackNavigator from './src/navigation/StackNavigator';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [visible, setVisible] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
-      <NavigationContainer>
-        <Tab.Navigator
-          tabBar={props => (
-            <Appbar
-              {...props}
-              onAddPress={() => setVisible(true)}
-            />
-          )}
-          screenOptions={{ headerShown: false }}
-        >
-          <Tab.Screen name="Home" component={Home} />
-          {/* <Tab.Screen name="Search" component={Search} />
-          <Tab.Screen name="Previous" component={Previous} /> */}
-          <Tab.Screen name="Profile" component={Profile} />
-        </Tab.Navigator>
-      </NavigationContainer>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <StackNavigator visible={visible} setVisible={setVisible} />
+        </NavigationContainer>
 
-      <AddNewModal visible={visible} setVisible={setVisible} />
+        {/* Global modal for adding tasks */}
+        <AddNewModal visible={visible} setVisible={setVisible} />
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-});
