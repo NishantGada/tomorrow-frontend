@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function Date({ tomorrowDate }) {
+	const [defaultDateNumber, setDetaultDateNumber] = useState("11");
+	const [defaultDateMonth, setDetaultDateMonth] = useState("Nov");
+
 	return (
 		<View style={styles.dateContainer}>
-			<Text style={styles.dateNumber}>{tomorrowDate["day"]}</Text>
-			<Text style={styles.dateMonth}>{tomorrowDate["month_name"]}</Text>
+			<Text style={styles.dateNumber}>{tomorrowDate["day"] ? tomorrowDate["day"] : defaultDateNumber}</Text>
+			<Text style={styles.dateMonth}>{tomorrowDate["day"] ? tomorrowDate["month_name"] : defaultDateMonth}</Text>
 		</View>
 	)
 }
