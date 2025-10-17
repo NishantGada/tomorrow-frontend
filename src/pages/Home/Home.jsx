@@ -8,15 +8,14 @@ import SendRequest from '../../utils/SendRequest';
 // import { GlobalConstants } from '../../utils/GlobalConstants';
 // import { formatDateSimple } from '../../utils/GetDate';
 
-export default function Home({ navigation }) {
+export default function Home({ visible, setVisible }) {
   const [tasks, setTasks] = useState([])
   const [tomorrowDate, setTomorrowDate] = useState({});
 
   const getTasksAPI = async () => {
     try {
       const response = await SendRequest("/tasks", {}, "GET", {});
-      console.log("response: ", response.data.data.tasks);
-      setTasks(...tasks, response.data.data.tasks)
+      setTasks(response.data.data.tasks)
 
     } catch (error) {
       console.log("error: ", error);
@@ -46,7 +45,9 @@ export default function Home({ navigation }) {
     getTasksAPI();
   }, [])
 
-  console.log(tomorrowDate);
+  useEffect(() => {
+    if (!visible) getTasksAPI();
+  }, [visible, setVisible]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
@@ -59,9 +60,9 @@ export default function Home({ navigation }) {
           <Date tomorrowDate={tomorrowDate} />
         </View>
 
-        <TaskCard category={StyleConstants["high"]} tasks={tasks.filter(task => task.priority === "high")} setTasks={setTasks} />
-        <TaskCard category={StyleConstants["medium"]} tasks={tasks.filter(task => task.priority === "medium")} setTasks={setTasks} />
-        <TaskCard category={StyleConstants["low"]} tasks={tasks.filter(task => task.priority === "low")} setTasks={setTasks} />
+        <TaskCard category={StyleConstants["high"]} tasks={tasks?.filter(task => task.priority === "high")} setTasks={setTasks} />
+        <TaskCard category={StyleConstants["medium"]} tasks={tasks?.filter(task => task.priority === "medium")} setTasks={setTasks} />
+        <TaskCard category={StyleConstants["low"]} tasks={tasks?.filter(task => task.priority === "low")} setTasks={setTasks} />
       </ScrollView>
     </SafeAreaView>
   )
