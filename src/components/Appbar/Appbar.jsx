@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AddNewModal from '../Modal/AddNewModal';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Appbar({ state, descriptors, navigation, onAddPress }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.appBar}>
         {state.routes.map((route, index) => {
           const focused = state.index === index;
@@ -40,7 +41,7 @@ export default function Appbar({ state, descriptors, navigation, onAddPress }) {
       <TouchableOpacity onPress={onAddPress} style={styles.addButtonContainer}>
         <Text style={styles.addButton}>+</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -48,16 +49,12 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    marginBottom: 20,
     justifyContent: "center",
-    columnGap: 10
+    columnGap: 10,
+    backgroundColor: "white",
   },
 
   appBar: {
-    // position: 'absolute',
-    // bottom: 20,
-    // left: 10,
-
     flexDirection: 'row',
     alignSelf: 'center',
     alignItems: 'center',
