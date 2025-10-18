@@ -38,6 +38,24 @@ export default function TaskDetailModal({
     updateTaskAPI(updatedTaskObject);
   }
 
+  const deleteTaskAPI = async (task_id) => {
+    console.log("inside deleteTaskAPI");
+    try {
+      await SendRequest(`/task/${task_id}`, {}, "DELETE", {});
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  const markTaskDoneAPI = async () => {
+    try {
+      await SendRequest(`/task/done`, selectedTask, "POST", {});
+      deleteTaskAPI(selectedTask.task_id);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
   useEffect(() => {
     if (selectedTask) {
       setTitle(selectedTask.title);
@@ -70,7 +88,7 @@ export default function TaskDetailModal({
               <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, styles.doneButton]} onPress={onMarkDone}>
+            <TouchableOpacity style={[styles.button, styles.doneButton]} onPress={markTaskDoneAPI}>
               <Text style={styles.buttonText}>Mark Done</Text>
             </TouchableOpacity>
           </View>
