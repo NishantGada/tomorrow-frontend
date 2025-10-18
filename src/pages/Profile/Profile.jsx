@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -10,13 +10,34 @@ import {
   View,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import SendRequest from '../../utils/SendRequest';
 
 export default function Profile() {
   const { logout } = useAuth();
+  const [lowCount, setLowCount] = useState(0);
+  const [mediumCount, setMediumCount] = useState(0)
+  const [highCount, setHighCount] = useState(0)
 
   const handleOnLogout = () => {
     logout();
   }
+
+  const getCompletedTasksCountAPI = async () => {
+    try {
+      const response = await SendRequest("/tasks/completed", {}, "GET", {});
+      response.data.data.map((item, index) => {
+        if (item.priority == "low") setLowCount(item.count);
+        if (item.priority == "medium") setMediumCount(item.count);
+        if (item.priority == "high") setHighCount(item.count);
+      })
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    getCompletedTasksCountAPI()
+  }, [])
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -49,15 +70,15 @@ export default function Profile() {
           <Text style={styles.sectionTitle}>Completed Tasks Summary</Text>
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>24</Text>
+              <Text style={styles.statNumber}>{highCount}</Text>
               <Text style={styles.statLabel}>High</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>6</Text>
+              <Text style={styles.statNumber}>{mediumCount}</Text>
               <Text style={styles.statLabel}>Medium</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>3</Text>
+              <Text style={styles.statNumber}>{lowCount}</Text>
               <Text style={styles.statLabel}>Low</Text>
             </View>
           </View>
