@@ -14,7 +14,6 @@ export default function TaskDetailModal({
   visible,
   closeModal,
   selectedTask,
-  onMarkDone,
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

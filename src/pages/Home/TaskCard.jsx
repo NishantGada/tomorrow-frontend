@@ -41,15 +41,6 @@ const TaskCard = ({ category, tasks, setTasks }) => {
     setSelectedTaskIndex(null);
   };
 
-  const markDone = () => {
-    if (selectedTaskIndex !== null) {
-      const updatedTasks = [...tasks];
-      updatedTasks.splice(selectedTaskIndex, 1);
-      setTasks(updatedTasks);
-    }
-    closeModal();
-  };
-
   return (
     <View style={styles.cardWrapper}>
       <TouchableOpacity
@@ -89,7 +80,6 @@ const TaskCard = ({ category, tasks, setTasks }) => {
         visible={taskDetailModalVisible}
         closeModal={closeModal}
         selectedTask={selectedTask}
-        onMarkDone={markDone}
       />
     </View>
   );
