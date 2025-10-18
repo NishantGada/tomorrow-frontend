@@ -7,23 +7,22 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AddNewModal from './src/components/Modal/AddNewModal';
 import { AuthProvider } from './src/context/AuthContext';
 import StackNavigator from './src/navigation/StackNavigator';
-
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+import { TaskContextProvider } from './src/context/TaskContext';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <NavigationContainer>
-          <StackNavigator visible={visible} setVisible={setVisible} />
-        </NavigationContainer>
+        <TaskContextProvider>
+          <NavigationContainer>
+            <StackNavigator visible={visible} setVisible={setVisible} />
+          </NavigationContainer>
 
-        {/* Global modal for adding tasks */}
-        <AddNewModal visible={visible} setVisible={setVisible} />
+          {/* Global modal for adding tasks */}
+          <AddNewModal visible={visible} setVisible={setVisible} />
+        </TaskContextProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );
