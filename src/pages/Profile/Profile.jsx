@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -11,9 +11,12 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import SendRequest from '../../utils/SendRequest';
+import { TaskContext } from '../../context/TaskContext';
 
 export default function Profile() {
   const { logout } = useAuth();
+  const { contextTasks } = useContext(TaskContext);
+
   const [lowCount, setLowCount] = useState(0);
   const [mediumCount, setMediumCount] = useState(0)
   const [highCount, setHighCount] = useState(0)
@@ -36,8 +39,8 @@ export default function Profile() {
   }
 
   useEffect(() => {
-    getCompletedTasksCountAPI()
-  }, [])
+    getCompletedTasksCountAPI();
+  }, [contextTasks])
 
   return (
     <SafeAreaView style={styles.safeArea}>

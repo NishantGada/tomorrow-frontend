@@ -1,16 +1,17 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import Date from './Date'
-import TaskCard from './TaskCard'
-import { StyleConstants } from '../../utils/StyleConstants';
+import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
-// import { GlobalConstants } from '../../utils/GlobalConstants';
-// import { formatDateSimple } from '../../utils/GetDate';
+import { StyleConstants } from '../../utils/StyleConstants';
+import Date from './Date';
+import TaskCard from './TaskCard';
 
 export default function Home({ visible, setVisible }) {
   const [tasks, setTasks] = useState([])
   const [tomorrowDate, setTomorrowDate] = useState({});
+
+  const { contextTasks, refreshTasks } = useContext(TaskContext);
 
   const getTasksAPI = async () => {
     try {
@@ -35,18 +36,13 @@ export default function Home({ visible, setVisible }) {
     }
   }
 
-  // const today = new Date();
-  // const todayFormatted = formatDateSimple(today);
-  // const todaysTasks = tasks.filter(task => task.date_added === todayFormatted);
-  // console.log({ todaysTasks });
-
   useEffect(() => {
     getTomorrowDateAPI();
     getTasksAPI();
-  }, [])
+  }, [contextTasks])
 
   useEffect(() => {
-    if (!visible) getTasksAPI();
+    if (!visible) refreshTasks();
   }, [visible, setVisible]);
 
   return (

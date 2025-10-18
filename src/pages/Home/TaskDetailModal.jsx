@@ -1,13 +1,14 @@
 // TaskDetailModal.js
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Modal,
-  View,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
-} from 'react-native'
+  View,
+} from 'react-native';
+import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 
 export default function TaskDetailModal({
@@ -18,10 +19,13 @@ export default function TaskDetailModal({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const { refreshTasks } = useContext(TaskContext);
+
   const updateTaskAPI = async (updatedTaskObject) => {
     try {
       await SendRequest(`/task/${selectedTask.task_id}`, updatedTaskObject, "PUT", {});
       closeModal();
+      refreshTasks();
     } catch (error) {
       console.log("error: ", error);
     }
@@ -41,6 +45,8 @@ export default function TaskDetailModal({
     console.log("inside deleteTaskAPI");
     try {
       await SendRequest(`/task/${task_id}`, {}, "DELETE", {});
+      closeModal();
+      refreshTasks();
     } catch (error) {
       console.log("error: ", error);
     }

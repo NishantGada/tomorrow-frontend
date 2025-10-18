@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Modal, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 import PriorityDropdown from './PriorityDropdown';
 
@@ -7,6 +8,8 @@ export default function AddNewModal({ visible, setVisible }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selected, setSelected] = useState('high');
+
+  const { refreshTasks } = useContext(TaskContext);
 
   const addNewTaskAPI = async ({ title, description, selected }) => {
     try {
@@ -17,7 +20,7 @@ export default function AddNewModal({ visible, setVisible }) {
         "priority": selected
       }, "POST", {});
 
-      console.log("response: ", response);
+      refreshTasks();
     } catch (error) {
       console.log(error);
     }
