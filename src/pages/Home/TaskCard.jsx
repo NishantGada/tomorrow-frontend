@@ -11,40 +11,34 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 const TaskCard = ({ category, tasks, setTasks }) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const [taskDetailModalVisible, setTaskDetailModalVisible] = useState(false);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedDescription, setEditedDescription] = useState('');
   const [expanded, setExpanded] = useState(false); // Accordion state
+
+  const [selectedTask, setSelectedTask] = useState({});
 
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded);
   };
 
-  const openModal = (index) => {
-    setSelectedTaskIndex(index);
-    setEditedTitle(tasks[index].title);
-    setEditedDescription(tasks[index].description);
+  const fetchTaskByTaskIdAPI = async (task_id) => {
+    try {
+      const response = await SendRequest(`/tasks/${task_id}`, {}, "GET", {});
+      setSelectedTask(response.data.data.task);
+      openModal();
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  const openModal = () => {
     setTaskDetailModalVisible(true);
   };
 
   const closeModal = () => {
     setTaskDetailModalVisible(false);
     setSelectedTaskIndex(null);
-  };
-
-  const updateTask = () => {
-    if (selectedTaskIndex !== null) {
-      const updatedTasks = [...tasks];
-      updatedTasks[selectedTaskIndex] = {
-        title: editedTitle,
-        description: editedDescription,
-      };
-      setTasks(updatedTasks);
-    }
-    closeModal();
   };
 
   const markDone = () => {
@@ -78,7 +72,7 @@ const TaskCard = ({ category, tasks, setTasks }) => {
             tasks.map((task, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => openModal(index)}
+                onPress={() => fetchTaskByTaskIdAPI(task.task_id)}
                 style={styles.taskRow}
               >
                 <Text style={styles.taskText}>{task.title}</Text>
@@ -93,12 +87,9 @@ const TaskCard = ({ category, tasks, setTasks }) => {
 
       <TaskDetailModal
         visible={taskDetailModalVisible}
-        onClose={closeModal}
-        task={{ title: editedTitle, description: editedDescription }}
-        onUpdate={updateTask}
+        closeModal={closeModal}
+        selectedTask={selectedTask}
         onMarkDone={markDone}
-        setEditedTitle={setEditedTitle}
-        setEditedDescription={setEditedDescription}
       />
     </View>
   );
