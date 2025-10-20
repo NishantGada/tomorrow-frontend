@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 
@@ -18,7 +19,6 @@ export default function TaskDetailModal({
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
   const { refreshTasks } = useContext(TaskContext);
 
   const updateTaskAPI = async (updatedTaskObject) => {
@@ -37,12 +37,10 @@ export default function TaskDetailModal({
       "description": description,
       "priority": selectedTask.priority
     }
-
     updateTaskAPI(updatedTaskObject);
   }
 
   const deleteTaskAPI = async (task_id) => {
-    console.log("inside deleteTaskAPI");
     try {
       await SendRequest(`/task/${task_id}`, {}, "DELETE", {});
       closeModal();
@@ -68,39 +66,86 @@ export default function TaskDetailModal({
     }
   }, [selectedTask])
 
+  const getPriorityColor = (priority) => {
+    switch(priority) {
+      case 'high':
+        return '#f08080';
+      case 'medium':
+        return '#ffeb99';
+      case 'low':
+        return '#d4f4dd';
+      default:
+        return '#6B7280';
+    }
+  }
+
+  const getPriorityIcon = (priority) => {
+    switch(priority) {
+      case 'high':
+        return 'alert-circle';
+      case 'medium':
+        return 'ellipse';
+      case 'low':
+        return 'checkmark-circle';
+      default:
+        return 'help-circle';
+    }
+  }
+
   return (
-    <Modal visible={visible} animationType="none" transparent>
+    <Modal visible={visible} animationType="fade" transparent>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.heading}>Task Details</Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Title"
-            value={title}
-            onChangeText={setTitle}
-          />
-          <TextInput
-            style={[styles.input, { height: 100 }]}
-            placeholder="Description"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-          />
-
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.button} onPress={handleOnUpdate}>
-              <Text style={styles.buttonText}>Update</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.button, styles.doneButton]} onPress={markTaskDoneAPI}>
-              <Text style={styles.buttonText}>Mark Done</Text>
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              <Text style={styles.heading}>Task Details</Text>
+              <View style={[styles.priorityBadge, { backgroundColor: getPriorityColor(selectedTask?.priority) }]}>
+                <Ionicons name={getPriorityIcon(selectedTask?.priority)} size={12} color="#333" />
+                <Text style={styles.priorityText}>{selectedTask?.priority?.toUpperCase()}</Text>
+              </View>
+            </View>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Ionicons name="close" size={22} color="#374151" />
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={closeModal}>
-            <Text style={styles.closeText}>Close</Text>
-          </TouchableOpacity>
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>Title</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter task title"
+              placeholderTextColor="#9CA3AF"
+              value={title}
+              onChangeText={setTitle}
+            />
+          </View>
+
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={[styles.input, styles.descriptionInput]}
+              placeholder="Enter task description"
+              placeholderTextColor="#9CA3AF"
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              textAlignVertical="top"
+            />
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.updateButton} onPress={handleOnUpdate} title="Update">
+              <Ionicons name="pencil" size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.doneButton} onPress={markTaskDoneAPI} title="Mark Done">
+              <Ionicons name="trophy" size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTaskAPI(selectedTask.task_id)} title="Delete">
+              <Ionicons name="trash" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -110,51 +155,119 @@ export default function TaskDetailModal({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#000000aa',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
-    padding: 20,
+    alignItems: 'center',
   },
   modalContainer: {
     backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-    elevation: 5,
+    borderRadius: 20,
+    padding: 24,
+    width: '85%',
+    maxHeight: '85%',
   },
-  heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 15,
-  },
-  buttonRow: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
   },
-  button: {
-    backgroundColor: '#0077b6',
-    padding: 10,
-    borderRadius: 8,
+  headerLeft: {
     flex: 1,
-    marginRight: 10,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  priorityBadge: {
+    flexDirection: 'row',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+    gap: 6,
+    alignSelf: 'flex-start',
+  },
+  priorityText: {
+    color: '#333',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputSection: {
+    marginBottom: 18,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 15,
+    color: '#111827',
+    backgroundColor: '#FAFAFA',
+  },
+  descriptionInput: {
+    height: 110,
+    paddingTop: 12,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 24,
+  },
+  updateButton: {
+    backgroundColor: '#3B82F6',
+    flex: 1,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   doneButton: {
-    backgroundColor: '#2a9d8f',
-    marginRight: 0,
-    marginLeft: 10,
+    backgroundColor: '#10B981',
+    flex: 1,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
+  deleteButton: {
+    backgroundColor: '#EF4444',
+    flex: 1,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#EF4444',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  closeText: {
-    textAlign: 'center',
-    marginTop: 15,
-    color: 'gray',
-  },
-})
+});
