@@ -38,3 +38,5 @@ yarn-error.*
 
 notes.txt
 src/pages/Onboarding
+src/utils/GetDate.js
+src/utils/GlobalConstants.js
