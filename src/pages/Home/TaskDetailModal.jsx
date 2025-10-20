@@ -16,6 +16,7 @@ export default function TaskDetailModal({
   visible,
   closeModal,
   selectedTask,
+  deleteTaskAPI
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,16 +41,6 @@ export default function TaskDetailModal({
     updateTaskAPI(updatedTaskObject);
   }
 
-  const deleteTaskAPI = async (task_id) => {
-    try {
-      await SendRequest(`/task/${task_id}`, {}, "DELETE", {});
-      closeModal();
-      refreshTasks();
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  }
-
   const markTaskDoneAPI = async () => {
     try {
       await SendRequest(`/task/done`, selectedTask, "POST", {});
@@ -67,7 +58,7 @@ export default function TaskDetailModal({
   }, [selectedTask])
 
   const getPriorityColor = (priority) => {
-    switch(priority) {
+    switch (priority) {
       case 'high':
         return '#f08080';
       case 'medium':
@@ -80,7 +71,7 @@ export default function TaskDetailModal({
   }
 
   const getPriorityIcon = (priority) => {
-    switch(priority) {
+    switch (priority) {
       case 'high':
         return 'alert-circle';
       case 'medium':
@@ -135,15 +126,13 @@ export default function TaskDetailModal({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.updateButton} onPress={handleOnUpdate} title="Update">
-              <Ionicons name="pencil" size={20} color="white" />
+              <Text style={styles.actionButtonText}>update</Text>
+              <Ionicons name="pencil" size={16} color="white" />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.doneButton} onPress={markTaskDoneAPI} title="Mark Done">
-              <Ionicons name="trophy" size={20} color="white" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTaskAPI(selectedTask.task_id)} title="Delete">
-              <Ionicons name="trash" size={20} color="white" />
+              <Text style={styles.actionButtonText}>mark done</Text>
+              <Ionicons name="trophy" size={16} color="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -231,6 +220,11 @@ const styles = StyleSheet.create({
     gap: 12,
     marginTop: 24,
   },
+  actionButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
   updateButton: {
     backgroundColor: '#3B82F6',
     flex: 1,
@@ -238,6 +232,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: "row",
+    columnGap: 5,
     shadowColor: '#3B82F6',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -251,6 +247,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: "row",
+    columnGap: 5,
     shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
