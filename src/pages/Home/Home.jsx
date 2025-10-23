@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { TaskContext } from '../../context/TaskContext';
+import { UserContext } from '../../context/UserContext';
 import SendRequest from '../../utils/SendRequest';
 import { StyleConstants } from '../../utils/StyleConstants';
 import Date from './Date';
@@ -12,6 +13,7 @@ export default function Home({ visible, setVisible }) {
   const [tomorrowDate, setTomorrowDate] = useState({});
 
   const { contextTasks, refreshTasks } = useContext(TaskContext);
+  const { fetchUserDetails } = useContext(UserContext);
 
   const getTasksAPI = async () => {
     try {
@@ -40,6 +42,10 @@ export default function Home({ visible, setVisible }) {
     getTomorrowDateAPI();
     getTasksAPI();
   }, [contextTasks])
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, [])
 
   useEffect(() => {
     if (!visible) refreshTasks();
