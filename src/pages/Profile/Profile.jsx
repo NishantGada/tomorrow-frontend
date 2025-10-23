@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
+  Keyboard,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -12,15 +13,17 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Keyboard,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
+import { UserContext } from '../../context/UserContext';
 import SendRequest from '../../utils/SendRequest';
 
 export default function Profile() {
   const { logout } = useAuth();
   const { contextTasks } = useContext(TaskContext);
+  const { user, fetchUserDetails } = useContext(UserContext);
+
   const [lowCount, setLowCount] = useState(0);
   const [mediumCount, setMediumCount] = useState(0);
   const [highCount, setHighCount] = useState(0);
@@ -28,17 +31,9 @@ export default function Profile() {
   const [editTab, setEditTab] = useState('general'); // 'general' or 'password'
   const [loading, setLoading] = useState(false);
 
-  // Profile form state
-  const [firstName, setFirstName] = useState('Nishant');
-  const [lastName, setLastName] = useState('Gada');
-  const [email, setEmail] = useState('ashmita.pal@example.com');
-  const [phone, setPhone] = useState('+1 (555) 123-4567');
-
-  // Temp state for form editing
-  const [tempFirstName, setTempFirstName] = useState(firstName);
-  const [tempLastName, setTempLastName] = useState(lastName);
-  const [tempEmail, setTempEmail] = useState(email);
-  const [tempPhone, setTempPhone] = useState(phone);
+  const [updatedFirstName, setUpdatedFirstName] = useState(user.first_name);
+  const [updatedLastName, setUpdatedLastName] = useState(user.last_name);
+  const [updatedPhone, setUpdatedPhone] = useState(user.phone);
 
   // Password state
   const [currentPassword, setCurrentPassword] = useState('');
@@ -85,19 +80,18 @@ export default function Profile() {
 
   const updateUserDetailsAPI = async () => {
     setLoading(true);
+
+    const request_body = {
+      first_name: updatedFirstName,
+      last_name: updatedLastName,
+      phone: updatedPhone,
+    }
+
     try {
-      await SendRequest("/user", {
-        firstName: tempFirstName,
-        lastName: tempLastName,
-        email: tempEmail,
-        phone: tempPhone,
-      }, "PUT", {});
-      
-      setFirstName(tempFirstName);
-      setLastName(tempLastName);
-      setEmail(tempEmail);
-      setPhone(tempPhone);
+      await SendRequest("/user", request_body, "PUT", {});
+
       setEditModalVisible(false);
+      fetchUserDetails();
     } catch (error) {
       alert('Failed to update profile');
       console.log("error: ", error);
@@ -121,7 +115,7 @@ export default function Profile() {
       await SendRequest("/change-password", {
         newPassword,
       }, "PUT", {});
-      
+
       alert('Password changed successfully');
       setCurrentPassword('');
       setNewPassword('');
@@ -137,10 +131,6 @@ export default function Profile() {
   };
 
   const openEditModal = () => {
-    setTempFirstName(firstName);
-    setTempLastName(lastName);
-    setTempEmail(email);
-    setTempPhone(phone);
     setEditTab('general');
     setPasswordVerified(false);
     setCurrentPassword('');
@@ -177,9 +167,9 @@ export default function Profile() {
             </TouchableOpacity>
           </View>
           <View style={styles.headerInfo}>
-            <Text style={styles.name}>{firstName} {lastName}</Text>
-            <Text style={styles.email}>{email}</Text>
-            <Text style={styles.phone}>{phone}</Text>
+            <Text style={styles.name}>{user.first_name} {user.last_name}</Text>
+            <Text style={styles.email}>{user.email}</Text>
+            <Text style={styles.phone}>{user.phone}</Text>
           </View>
         </View>
 
@@ -278,8 +268,8 @@ export default function Profile() {
                       style={styles.input}
                       placeholder="Enter your first name"
                       placeholderTextColor="#9CA3AF"
-                      value={tempFirstName}
-                      onChangeText={setTempFirstName}
+                      value={updatedFirstName}
+                      onChangeText={setUpdatedFirstName}
                       editable={!loading}
                     />
                   </View>
@@ -290,8 +280,8 @@ export default function Profile() {
                       style={styles.input}
                       placeholder="Enter your last name"
                       placeholderTextColor="#9CA3AF"
-                      value={tempLastName}
-                      onChangeText={setTempLastName}
+                      value={updatedLastName}
+                      onChangeText={setUpdatedLastName}
                       editable={!loading}
                     />
                   </View>
@@ -299,12 +289,11 @@ export default function Profile() {
                   <View style={styles.formSection}>
                     <Text style={styles.label}>Email</Text>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, { backgroundColor: 'lightgray', color: 'gray' }]}
                       placeholder="Enter your email"
-                      placeholderTextColor="#9CA3AF"
-                      value={tempEmail}
-                      onChangeText={setTempEmail}
-                      editable={!loading}
+                      placeholderTextColor="lightgray"
+                      value={user.email}
+                      editable={false}
                       keyboardType="email-address"
                     />
                   </View>
@@ -315,8 +304,8 @@ export default function Profile() {
                       style={styles.input}
                       placeholder="Enter your phone number"
                       placeholderTextColor="#9CA3AF"
-                      value={tempPhone}
-                      onChangeText={setTempPhone}
+                      value={updatedPhone}
+                      onChangeText={setUpdatedPhone}
                       editable={!loading}
                       keyboardType="phone-pad"
                     />
@@ -518,6 +507,7 @@ const styles = StyleSheet.create({
   },
   headerInfo: {
     flex: 1,
+    rowGap: 5
   },
   name: {
     fontSize: 20,
@@ -527,12 +517,10 @@ const styles = StyleSheet.create({
   email: {
     fontSize: 13,
     color: '#8E8E93',
-    marginTop: 4,
   },
   phone: {
     fontSize: 13,
     color: '#8E8E93',
-    marginTop: 2,
   },
   divider: {
     height: 20,
