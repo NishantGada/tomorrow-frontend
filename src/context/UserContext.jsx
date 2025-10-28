@@ -1,15 +1,17 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import SendRequest from '../utils/SendRequest';
+import { useAuth } from './AuthContext';
 
 export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  const [reload, setReload] = useState(false);
+
+  const { loggedInUser } = useAuth();
 
   const getUserDetailsAPI = async () => {
     try {
-      const response = await SendRequest("/user", {}, "GET", {});
+      const response = await SendRequest("/user", {}, loggedInUser, "GET", {});
       setUser({
         ...user,
         first_name: response.data.data.user.first_name,
@@ -18,15 +20,11 @@ export const UserContextProvider = ({ children }) => {
         email: response.data.data.user.email,
       })
     } catch (error) {
-      console.log("error: ", error);
+      console.log("getUserDetailsAPI error: ", error);
     }
   }
 
-  const fetchUserDetails = () => setReload(prev => !prev);
-
-  useEffect(() => {
-    getUserDetailsAPI();
-  }, [reload]);
+  const fetchUserDetails = () => getUserDetailsAPI();
 
   return (
     <UserContext.Provider value={{ user, setUser, fetchUserDetails }}>
