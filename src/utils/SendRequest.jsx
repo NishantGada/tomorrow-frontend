@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-const SendRequest = (path, data, method = 'POST', headers = {}) => {
+const SendRequest = (path, data, authUser, method = 'POST', headers = {}) => {
+  // path = "http://10.110.128.5:8080" + path;
   path = "http://10.0.0.97:8080" + path;
-  const username = 'ng@gmail.com';
-  const password = 'qweqwe';
+
+  const username = authUser.username;
+  const password = authUser.password;
   const token = btoa(`${username}:${password}`);
 
   headers = {
