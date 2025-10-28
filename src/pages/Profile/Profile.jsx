@@ -20,7 +20,7 @@ import { UserContext } from '../../context/UserContext';
 import SendRequest from '../../utils/SendRequest';
 
 export default function Profile() {
-  const { logout } = useAuth();
+  const { logout, loggedInUser } = useAuth();
   const { contextTasks } = useContext(TaskContext);
   const { user, fetchUserDetails } = useContext(UserContext);
 
@@ -28,7 +28,7 @@ export default function Profile() {
   const [mediumCount, setMediumCount] = useState(0);
   const [highCount, setHighCount] = useState(0);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editTab, setEditTab] = useState('general'); // 'general' or 'password'
+  const [editTab, setEditTab] = useState('general');
   const [loading, setLoading] = useState(false);
 
   const [updatedFirstName, setUpdatedFirstName] = useState(user.first_name);
@@ -50,14 +50,14 @@ export default function Profile() {
 
   const getCompletedTasksCountAPI = async () => {
     try {
-      const response = await SendRequest("/tasks/completed", {}, "GET", {});
+      const response = await SendRequest("/tasks/completed", {}, loggedInUser, "GET", {});
       response.data.data.map((item) => {
         if (item.priority === "low") setLowCount(item.count);
         if (item.priority === "medium") setMediumCount(item.count);
         if (item.priority === "high") setHighCount(item.count);
       });
     } catch (error) {
-      console.log("error: ", error);
+      console.log("getCompletedTasksCountAPI error: ", error);
     }
   };
 
@@ -68,11 +68,11 @@ export default function Profile() {
     }
     setLoading(true);
     try {
-      await SendRequest("/verify-password", { password: currentPassword }, "POST", {});
+      await SendRequest("/verify-password", { password: currentPassword }, loggedInUser, "POST", {});
       setPasswordVerified(true);
     } catch (error) {
       alert('Incorrect password. Please try again.');
-      console.log("error: ", error);
+      console.log("verifyCurrentPassword error: ", error);
     } finally {
       setLoading(false);
     }
@@ -88,13 +88,13 @@ export default function Profile() {
     }
 
     try {
-      await SendRequest("/user", request_body, "PUT", {});
+      await SendRequest("/user", request_body, loggedInUser, "PUT", {});
 
       setEditModalVisible(false);
       fetchUserDetails();
     } catch (error) {
       alert('Failed to update profile');
-      console.log("error: ", error);
+      console.log("updateUserDetailsAPI error: ", error);
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ export default function Profile() {
     try {
       await SendRequest("/change-password", {
         newPassword,
-      }, "PUT", {});
+      }, loggedInUser, "PUT", {});
 
       alert('Password changed successfully');
       setCurrentPassword('');
@@ -124,7 +124,7 @@ export default function Profile() {
       setEditModalVisible(false);
     } catch (error) {
       alert('Failed to change password');
-      console.log("error: ", error);
+      console.log("updatePasswordAPI error: ", error);
     } finally {
       setLoading(false);
     }
@@ -202,8 +202,8 @@ export default function Profile() {
         <View style={styles.divider} />
 
         {/* Edit Profile Button */}
-        <TouchableOpacity style={styles.button} onPress={openEditModal}>
-          <Ionicons name="pencil" size={18} color="#fff" />
+        <TouchableOpacity style={[styles.button, styles.editButton]} onPress={openEditModal}>
+          <Ionicons name="pencil" size={18} color="black" />
           <Text style={styles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
 
@@ -585,14 +585,28 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     fontWeight: '600',
     fontSize: 15,
+  },
+  editButton: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: "black"
   },
   logoutButton: {
     backgroundColor: '#fff',
     borderWidth: 1.5,
     borderColor: '#E53935',
+    shadowColor: '#E53935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.05,
   },
   logoutText: {
     color: '#E53935',
