@@ -1,31 +1,51 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("ng@gmail.com");
-  const [password, setPassword] = useState('qweqwe');
+  const [email, setEmail] = useState("test@gmail.com");
+  const [password, setPassword] = useState("qweasd2");
   const { login } = useAuth();
-
-  // const handleLogin = (userData) => {
-  //   login(userData); // sets user globally
-  // };
 
   const handleSignupPress = () => {
     navigation.navigate("Signup");
   }
+
+  const validateCredentials = async () => {
+    try {
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  const raiseInvalidCredentialsError = async () => {
+    alert('Invalid Credentials!');
+  }
+
+  // const redirectToHomePage = (email, password) => {
+  //   console.log("redirectToHomePage email, password: ", email, password);
+  //   setLoggedInUser({ ...loggedInUser, username: email, password: password });
+  // }
 
   const handleLogin = () => {
     if (!email || !password) {
       alert('Please fill all fields');
       return;
     }
-    login();
+    const userData = {
+      username: email,
+      password: password
+    }
+    validateCredentials() ? login(userData) : raiseInvalidCredentialsError()
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Welcome back</Text>
+      <View>
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.subTitle}>Let's build your tomorrow!</Text>
+      </View>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -56,9 +76,28 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#F8F9FB' },
-  title: { fontSize: 26, fontWeight: '700', color: '#1A1A1A', marginBottom: 24 },
-  inputContainer: { width: '100%', marginBottom: 20 },
+  container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    rowGap: 20,
+    padding: 24,
+    backgroundColor: '#F8F9FB'
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  subTitle: {
+    fontSize: 16,
+    color: '#1A1A1A',
+  },
+  inputContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    rowGap: '20'
+  },
   input: {
     backgroundColor: '#fff',
     padding: 14,
@@ -66,7 +105,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-    marginBottom: 12,
   },
   button: {
     backgroundColor: '#1E88E5',
@@ -74,8 +112,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 16,
   },
-  buttonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
-  linkText: { color: '#1E88E5', fontSize: 14 },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16
+  },
+  linkText: {
+    color: '#1E88E5',
+    fontSize: 14
+  },
 });
