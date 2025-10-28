@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Alert, LayoutAnimation, Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 import TaskDetailModal from './TaskDetailModal';
@@ -10,12 +11,14 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const TaskCard = ({ category, tasks, setTasks }) => {
+const TaskCard = ({ category, tasks }) => {
   const [taskDetailModalVisible, setTaskDetailModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [swipedTaskId, setSwipedTaskId] = useState(null);
+  
   const { refreshTasks } = useContext(TaskContext);
+  const { loggedInUser } = useAuth();
 
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -24,11 +27,11 @@ const TaskCard = ({ category, tasks, setTasks }) => {
 
   const fetchTaskByTaskIdAPI = async (task_id) => {
     try {
-      const response = await SendRequest(`/tasks/${task_id}`, {}, "GET", {});
+      const response = await SendRequest(`/tasks/${task_id}`, {}, loggedInUser, "GET", {});
       setSelectedTask(response.data.data.task);
       openModal();
     } catch (error) {
-      console.log("error: ", error);
+      console.log("fetchTaskByTaskIdAPI error: ", error);
     }
   };
 
@@ -45,12 +48,12 @@ const TaskCard = ({ category, tasks, setTasks }) => {
   }
 
   const deleteTaskAPI = async (task_id) => {
-    console.log("here bitch!");
+    console.log("inside deleteTaskAPI");
     try {
-      await SendRequest(`/task/${task_id}`, {}, "DELETE", {});
+      await SendRequest(`/task/${task_id}`, {}, loggedInUser, "DELETE", {});
       refreshTasks();
     } catch (error) {
-      console.log("error: ", error);
+      console.log("deleteTaskAPI error: ", error);
     }
   }
 
@@ -244,7 +247,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   priorityIndicator: {
-    width: 4,
+    width: 8,
     height: 40,
     borderRadius: 2,
   },

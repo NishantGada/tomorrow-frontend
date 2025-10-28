@@ -1,4 +1,5 @@
 // TaskDetailModal.js
+import { Ionicons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Modal,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 
@@ -22,13 +23,15 @@ export default function TaskDetailModal({
   const [description, setDescription] = useState("");
   const { refreshTasks } = useContext(TaskContext);
 
+  const { loggedInUser } = useAuth();
+
   const updateTaskAPI = async (updatedTaskObject) => {
     try {
-      await SendRequest(`/task/${selectedTask.task_id}`, updatedTaskObject, "PUT", {});
+      await SendRequest(`/task/${selectedTask.task_id}`, updatedTaskObject, loggedInUser, "PUT", {});
       closeModal();
       refreshTasks();
     } catch (error) {
-      console.log("error: ", error);
+      console.log("updateTaskAPI error: ", error);
     }
   }
 
@@ -43,10 +46,11 @@ export default function TaskDetailModal({
 
   const markTaskDoneAPI = async () => {
     try {
-      await SendRequest(`/task/done`, selectedTask, "POST", {});
+      await SendRequest(`/task/done`, selectedTask, loggedInUser, "POST", {});
       deleteTaskAPI(selectedTask.task_id);
+      closeModal();
     } catch (error) {
-      console.log("error: ", error);
+      console.log("markTaskDoneAPI error: ", error);
     }
   }
 

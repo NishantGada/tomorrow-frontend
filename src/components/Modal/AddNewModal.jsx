@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { ActivityIndicator, Keyboard, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
 import SendRequest from '../../utils/SendRequest';
 import PriorityDropdown from './PriorityDropdown';
@@ -10,7 +11,9 @@ export default function AddNewModal({ visible, setVisible }) {
   const [description, setDescription] = useState('');
   const [selected, setSelected] = useState('high');
   const [loading, setLoading] = useState(false);
+
   const { refreshTasks } = useContext(TaskContext);
+  const { loggedInUser } = useAuth();
 
   const addNewTaskAPI = async ({ title, description, selected }) => {
     setLoading(true);
@@ -19,7 +22,7 @@ export default function AddNewModal({ visible, setVisible }) {
         title,
         description,
         priority: selected
-      }, "POST", {});
+      }, loggedInUser, "POST", {});
       refreshTasks();
       handleClose();
     } catch (error) {
