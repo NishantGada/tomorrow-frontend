@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
 import { UserContext } from '../../context/UserContext';
 import SendRequest from '../../utils/SendRequest';
@@ -8,48 +9,35 @@ import { StyleConstants } from '../../utils/StyleConstants';
 import Date from './Date';
 import TaskCard from './TaskCard';
 
-export default function Home({ visible, setVisible }) {
-  const [tasks, setTasks] = useState([])
+export default function Home({ visible }) {
   const [tomorrowDate, setTomorrowDate] = useState({});
 
   const { contextTasks, refreshTasks } = useContext(TaskContext);
   const { fetchUserDetails } = useContext(UserContext);
-
-  const getTasksAPI = async () => {
-    try {
-      const response = await SendRequest("/tasks", {}, "GET", {});
-      setTasks(response.data.data.tasks)
-
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  }
+  const { loggedInUser } = useAuth();
 
   const getTomorrowDateAPI = async () => {
+    console.log("inside getTomorrowDateAPI");
     try {
-      const response = await SendRequest("/tomorrow-date", {}, "GET", {});
+      const response = await SendRequest("/tomorrow-date", {}, loggedInUser, "GET", {});
       setTomorrowDate({
         "day": response.data.data.day,
         "month": response.data.data.month,
         "month_name": response.data.data.month_name
       })
     } catch (error) {
-      console.log("error: ", error);
+      console.log("getTomorrowDateAPI error: ", error);
     }
   }
 
   useEffect(() => {
     getTomorrowDateAPI();
-    getTasksAPI();
-  }, [contextTasks])
-
-  useEffect(() => {
-    fetchUserDetails();
+    if (loggedInUser) fetchUserDetails();
   }, [])
 
   useEffect(() => {
     if (!visible) refreshTasks();
-  }, [visible, setVisible]);
+  }, [visible]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
@@ -62,9 +50,9 @@ export default function Home({ visible, setVisible }) {
           <Date tomorrowDate={tomorrowDate} />
         </View>
 
-        <TaskCard category={StyleConstants["high"]} tasks={tasks?.filter(task => task.priority === "high")} setTasks={setTasks} />
-        <TaskCard category={StyleConstants["medium"]} tasks={tasks?.filter(task => task.priority === "medium")} setTasks={setTasks} />
-        <TaskCard category={StyleConstants["low"]} tasks={tasks?.filter(task => task.priority === "low")} setTasks={setTasks} />
+        <TaskCard category={StyleConstants["high"]} tasks={contextTasks?.filter(task => task.priority === "high")} />
+        <TaskCard category={StyleConstants["medium"]} tasks={contextTasks?.filter(task => task.priority === "medium")} />
+        <TaskCard category={StyleConstants["low"]} tasks={contextTasks?.filter(task => task.priority === "low")} />
       </ScrollView>
     </SafeAreaView>
   )
