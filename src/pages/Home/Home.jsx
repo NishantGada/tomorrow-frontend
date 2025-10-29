@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
 import { useAuth } from '../../context/AuthContext';
 import { TaskContext } from '../../context/TaskContext';
 import { UserContext } from '../../context/UserContext';
@@ -50,6 +52,22 @@ export default function Home({ visible }) {
           <Date tomorrowDate={tomorrowDate} />
         </View>
 
+        <View style={styles.aiContainer}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: 5 }}>
+            <Text style={styles.aiTextHeading}>AI Summary</Text>
+            <MaterialCommunityIcons name="star-four-points-outline" size={16} color="black" />
+          </View>
+          <Text style={styles.aiTextSummary}>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. A magnam aliquid modi esse temporibus rem dolor ipsa illum veniam qui, fuga tempora, cum quo ducimus libero quisquam voluptates. Voluptatibus, veritatis.
+          </Text>
+
+          {/* future feature (MAYBE) */}
+          {/* <TouchableOpacity style={styles.aiAskQuestionButton}>
+            <Text>Ask a question</Text>
+            <Feather name="arrow-right" size={16} color="black" />
+          </TouchableOpacity> */}
+        </View>
+
         <TaskCard category={StyleConstants["high"]} tasks={contextTasks?.filter(task => task.priority === "high")} />
         <TaskCard category={StyleConstants["medium"]} tasks={contextTasks?.filter(task => task.priority === "medium")} />
         <TaskCard category={StyleConstants["low"]} tasks={contextTasks?.filter(task => task.priority === "low")} />
@@ -78,7 +96,7 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
   },
 
@@ -87,4 +105,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10
   },
+
+  aiContainer: {
+    rowGap: 5
+  },
+
+  aiTextHeading: {
+    fontWeight: 'bold',
+    fontSize: '16'
+  },
+
+  aiTextSummary: {
+    color: 'gray',
+    textAlign: 'justify',
+  },
+
+  // aiAskQuestionButton: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   alignSelf: 'flex-start',
+  //   columnGap: '5',
+
+  //   borderWidth: 1.5,
+  //   borderRadius: 10,
+  //   marginVertical: 10,
+  //   padding: 10,
+  // }
 })
