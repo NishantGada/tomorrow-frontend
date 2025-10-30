@@ -20,7 +20,10 @@ export default function Signup({ onLoginPress, onSignupSuccess, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create your account</Text>
+      <View>
+        <Text style={styles.title}>Create your account</Text>
+        <Text style={styles.subTitle}>Start building your tomorrow!</Text>
+      </View>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -44,6 +47,13 @@ export default function Signup({ onLoginPress, onSignupSuccess, navigation }) {
         />
         <TextInput
           style={styles.input}
+          placeholder="Phone"
+          keyboardType="phone-pad"
+          value={form.email}
+          onChangeText={(v) => handleChange('email', v)}
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           secureTextEntry
           value={form.password}
@@ -55,17 +65,36 @@ export default function Signup({ onLoginPress, onSignupSuccess, navigation }) {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleAlreadyHaveAnAccount}>
-        <Text style={styles.linkText}>Already have an account? Log In</Text>
+      <TouchableOpacity style={styles.handleAlreadyHaveAnAccount} onPress={handleAlreadyHaveAnAccount}>
+        <Text>Already have an account?</Text>
+        <Text style={styles.linkText}>Log In</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#F8F9FB' },
-  title: { fontSize: 24, fontWeight: '700', color: '#1A1A1A', marginBottom: 24 },
-  inputContainer: { width: '100%', marginBottom: 20 },
+  container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    padding: 24,
+    rowGap: 20,
+    backgroundColor: '#F8F9FB'
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  subTitle: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  inputContainer: {
+    width: '100%',
+    rowGap: 20
+  },
   input: {
     backgroundColor: '#fff',
     padding: 14,
@@ -73,16 +102,33 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-    marginBottom: 12,
   },
   button: {
-    backgroundColor: '#1E88E5',
     paddingVertical: 14,
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 16,
+
+    borderWidth: 1.5,
+    borderColor: 'black',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 5,
   },
-  buttonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
-  linkText: { color: '#1E88E5', fontSize: 14 },
+  buttonText: {
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 16
+  },
+  linkText: {
+    color: '#1E88E5',
+    fontSize: 14
+  },
+  handleAlreadyHaveAnAccount: {
+    flexDirection: 'row',
+    columnGap: 5
+  }
 });

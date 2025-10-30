@@ -3,8 +3,8 @@ import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("qweasd2");
+  const [email, setEmail] = useState("ng@gmail.com");
+  const [password, setPassword] = useState("qweqwe");
   const { login } = useAuth();
 
   const handleSignupPress = () => {
@@ -44,7 +44,7 @@ export default function Login({ navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subTitle}>Let's build your tomorrow!</Text>
+        <Text style={styles.subTitle}>Continue build your tomorrow!</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -68,7 +68,7 @@ export default function Login({ navigation }) {
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={{ display: "flex", flexDirection: "row", columnGap: 5 }} onPress={handleSignupPress}>
+      <TouchableOpacity style={{ flexDirection: "row", columnGap: 5 }} onPress={handleSignupPress}>
         <Text>Don’t have an account?</Text><Text style={styles.linkText}>Sign Up</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
   },
   subTitle: {
-    fontSize: 16,
-    color: '#1A1A1A',
+    fontSize: 14,
+    color: 'gray',
   },
   inputContainer: {
     width: '100%',
     flexDirection: 'column',
-    rowGap: '20'
+    rowGap: 20
   },
   input: {
     backgroundColor: '#fff',
@@ -107,14 +107,15 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   button: {
-    backgroundColor: '#1E88E5',
+    borderWidth: 2,
+    borderColor: 'black',
     paddingVertical: 14,
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: 'black',
     fontWeight: '600',
     fontSize: 16
   },
